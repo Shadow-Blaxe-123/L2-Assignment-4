@@ -1,3 +1,7 @@
 export default function Footer() {
-  return <div>Footer</div>;
+  return (
+    <footer className="bg-gray-800 p-4 text-sm text-gray-500">
+      MinLibary™ . All Rights Reserved.
+    </footer>
+  );
 }
