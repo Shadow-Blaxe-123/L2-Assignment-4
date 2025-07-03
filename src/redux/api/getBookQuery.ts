@@ -1,5 +1,6 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import type { GetAllBooks } from "./types";
 // import type { Pokemon } from './types'
 
 // Define a service using a base URL and expected endpoints
@@ -12,8 +13,8 @@ export const booksAPi = createApi({
     // getPokemonByName: builder.query<Pokemon, string>({
     //   query: (name) => `pokemon/${name}`,
     // }),
-    getAllBooks: builder.query({
-      query: () => "/",
+    getAllBooks: builder.query<GetAllBooks, unknown>({
+      query: ({ limit = 15, page = 1 }) => `/?limit=${limit}&page=${page}`,
     }),
   }),
 });
