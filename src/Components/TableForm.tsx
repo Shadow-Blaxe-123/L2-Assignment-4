@@ -16,7 +16,6 @@ function TableForm() {
         <TableHeader>
           <TableRow className="md:text-xl lg:text-3xl text-black">
             <TableHead>Title</TableHead>
-            {/* <Separator /> */}
             <TableHead>Author</TableHead>
             <TableHead>Genre</TableHead>
             <TableHead>ISBN</TableHead>
