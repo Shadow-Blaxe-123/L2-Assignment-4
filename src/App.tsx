@@ -1,5 +1,11 @@
+import TableForm from "./Components/TableForm";
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <TableForm />
+    </>
+  );
 }
 
 export default App;
