@@ -1,3 +1,4 @@
+import { useGetAllBooksQuery } from "@/redux/api/getBookQuery";
 import {
   Table,
   TableBody,
@@ -9,6 +10,7 @@ import {
 } from "./ui/table";
 
 function TableForm() {
+  const { data, isLoading } = useGetAllBooksQuery(undefined);
   return (
     <div className="w-full p-5">
       <Table>

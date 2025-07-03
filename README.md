@@ -12,7 +12,6 @@ This is a minimalist full-stack website to manage a library.
 - Filter by Genre
 - Sort by any field in Ascending/Descending order.
 - Pagination
-- Darkmode maybe
 
 ## Tech
 
@@ -24,4 +23,6 @@ This is a minimalist full-stack website to manage a library.
 
 ## Todos
 
-- [ ] Make Navbar
+- [x] Make Navbar
+- [x] add cors
+- [x] add redux
