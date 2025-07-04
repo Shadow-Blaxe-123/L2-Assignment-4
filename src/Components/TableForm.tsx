@@ -52,15 +52,17 @@ import {
 // }
 
 function TableForm() {
-  const { data, isSuccess, isLoading, isError, error } =
-    useGetAllBooksQuery(undefined);
+  const { data, isSuccess, isLoading, isError, error } = useGetAllBooksQuery({
+    limit: 10,
+    page: 1,
+  });
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error loading books: {JSON.stringify(error)}</p>;
 
   if (isSuccess) {
     return (
-      <div className="w-full p-5 h-screen m-3">
+      <div className="w-full p-5 ">
         <Table>
           <TableCaption>A list of all the books in your library.</TableCaption>
           <TableHeader>

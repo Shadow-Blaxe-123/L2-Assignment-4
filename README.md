@@ -26,3 +26,12 @@ This is a minimalist full-stack website to manage a library.
 - [x] Make Navbar
 - [x] add cors
 - [x] add redux
+- [ ] Pagination
+- [ ] filter search
+- [ ] Edit/Borrow/Delete btns
+- [ ] Make the RTK Queries for the above btns
+- [ ] Make an Edit page
+- [ ] Make Delete Confirmation popup
+- [ ] A Borrow Modal success or toast
+- [ ] Make toasts for every action
+- [ ] Add a loading icon for API shenagins

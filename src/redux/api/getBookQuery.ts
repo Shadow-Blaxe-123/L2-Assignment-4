@@ -10,11 +10,8 @@ export const booksAPi = createApi({
     baseUrl: "https://assignment-3-omega-black.vercel.app/api/books",
   }),
   endpoints: (builder) => ({
-    // getPokemonByName: builder.query<Pokemon, string>({
-    //   query: (name) => `pokemon/${name}`,
-    // }),
-    getAllBooks: builder.query<GetAllBooks, unknown>({
-      query: ({ limit = 15, page = 1 }) => `/?limit=${limit}&page=${page}`,
+    getAllBooks: builder.query<GetAllBooks, { limit: number; page: number }>({
+      query: ({ limit, page }) => `/?limit=${limit}&page=${page}`, // Pagination params
     }),
   }),
 });

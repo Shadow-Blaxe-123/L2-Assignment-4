@@ -2,7 +2,7 @@ import TableForm from "./Components/TableForm";
 
 function App() {
   return (
-    <div className="mb-5">
+    <div>
       <TableForm />
     </div>
   );

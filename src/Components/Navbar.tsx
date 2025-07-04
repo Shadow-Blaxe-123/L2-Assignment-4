@@ -7,7 +7,7 @@ function Navbar() {
   const dispatch = useAppDispatch();
 
   return (
-    <nav className="bg-gray-900 border-b border-gray-700">
+    <nav className="bg-gray-900 border-b border-gray-700 top-0 w-full sticky z-10">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* Logo */}
         <div className="flex items-center space-x-3 rtl:space-x-reverse">
