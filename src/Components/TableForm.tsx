@@ -1,4 +1,7 @@
-import { useGetAllBooksQuery } from "@/redux/api/getBookQuery";
+import {
+  useDeleteBookMutation,
+  useGetAllBooksQuery,
+} from "@/redux/api/getBookQuery";
 import {
   Table,
   TableBody,
@@ -25,7 +28,17 @@ function TableForm() {
     page,
   });
 
-  if (isLoading)
+  const [deleteBook, { isLoading: isDeleting }] = useDeleteBookMutation();
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteBook(id).unwrap(); // unwrap to catch actual error
+      console.log("Deleted!");
+    } catch (err) {
+      console.error("Failed to delete:", err);
+    }
+  };
+
+  if (isLoading || isDeleting)
     return (
       <p className="flex items-center justify-center h-screen">
         <ClockLoader size={200} color="purple" speedMultiplier={2} />
@@ -89,7 +102,11 @@ function TableForm() {
                   <Button variant="secondary" size={"default"}>
                     <CiEdit />
                   </Button>
-                  <Button variant="destructive" size={"default"}>
+                  <Button
+                    variant="destructive"
+                    size={"default"}
+                    onClick={() => handleDelete(book._id)}
+                  >
                     <RiDeleteBin6Line />
                   </Button>
                   <Button>
