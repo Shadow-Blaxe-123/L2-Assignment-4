@@ -29,7 +29,7 @@ This is a minimalist full-stack website to manage a library.
 - [x] Pagination
 - [x] Fix the next button bug.
 - [ ] filter search
-- [ ] Edit/Borrow/Delete btns
+- [x] Edit/Borrow/Delete btns
 - [ ] Make the RTK Queries for the above btns
 - [ ] Make an Edit page
 - [ ] Make Delete Confirmation popup
