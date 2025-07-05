@@ -9,9 +9,11 @@ export const booksAPi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://assignment-3-omega-black.vercel.app/api/books",
   }),
+  tagTypes: ["Book"],
   endpoints: (builder) => ({
     getAllBooks: builder.query<GetAllBooks, { limit: number; page: number }>({
       query: ({ limit, page }) => `/?limit=${limit}&page=${page}`, // Pagination params
+      providesTags: ["Book"],
     }),
   }),
 });
