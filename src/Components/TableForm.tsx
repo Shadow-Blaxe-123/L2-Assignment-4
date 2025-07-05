@@ -18,6 +18,17 @@ import { Button } from "./ui/button";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { PiNotebookDuotone } from "react-icons/pi";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogAction,
+  AlertDialogFooter,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogTitle,
+  AlertDialogHeader,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
 
 function TableForm() {
   const [page, setPage] = useState(1);
@@ -102,13 +113,31 @@ function TableForm() {
                   <Button variant="secondary" size={"default"}>
                     <CiEdit />
                   </Button>
-                  <Button
-                    variant="destructive"
-                    size={"default"}
-                    onClick={() => handleDelete(book._id)}
-                  >
-                    <RiDeleteBin6Line />
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" size="default">
+                        <RiDeleteBin6Line />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. The book will be
+                          permanently deleted.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDelete(book._id)}
+                        >
+                          Yes, delete it
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+
                   <Button>
                     <PiNotebookDuotone />
                   </Button>
