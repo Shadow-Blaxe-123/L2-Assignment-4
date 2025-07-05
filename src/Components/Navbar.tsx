@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { toggle } from "@/redux/navbarSlice";
+import { allBooks } from "@/redux/paginationSlice";
 
 function Navbar() {
-  // const [isOpen, setIsOpen] = useState(false);
   const isOpen = useAppSelector((state) => state.navbar.isOpen);
   const dispatch = useAppDispatch();
 
@@ -52,7 +52,10 @@ function Navbar() {
           id="navbar-default"
         >
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-700 rounded-lg bg-gray-800 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-gray-900">
-            <li className="py-2 px-3 rounded-md text-white hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-500 transition-all cursor-pointer">
+            <li
+              className="py-2 px-3 rounded-md text-white hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-500 transition-all cursor-pointer"
+              onClick={() => dispatch(allBooks())}
+            >
               All Books
             </li>
             <li className="py-2 px-3 rounded-md text-white hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-500 transition-all cursor-pointer">

@@ -12,7 +12,6 @@ import {
   TableRow,
 } from "./ui/table";
 import { CiEdit } from "react-icons/ci";
-import { useState } from "react";
 import { ClockLoader } from "react-spinners";
 import { Button } from "./ui/button";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -29,15 +28,14 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { nextPage, prevPage } from "@/redux/paginationSlice";
 
 function TableForm() {
-  const [page, setPage] = useState(1);
-  const limit = 10;
-
-  const { data, isSuccess, isLoading, isError, error } = useGetAllBooksQuery({
-    limit,
-    page,
-  });
+  const dispatch = useAppDispatch();
+  const pagination = useAppSelector((state) => state.pagination);
+  const { data, isSuccess, isLoading, isError, error } =
+    useGetAllBooksQuery(pagination);
 
   const [deleteBook, { isLoading: isDeleting }] = useDeleteBookMutation();
   const handleDelete = async (id: string) => {
@@ -64,7 +62,7 @@ function TableForm() {
           <TableCaption>
             A list of all the books in your library.
             <ul className="flex items-center -space-x-px h-8 text-sm">
-              <li onClick={() => page > 1 && setPage(page - 1)}>
+              <li onClick={() => pagination.page > 1 && dispatch(prevPage())}>
                 <MdNavigateBefore
                   size={50}
                   className="hover:cursor-pointer hover:bg-gray-200"
@@ -72,8 +70,8 @@ function TableForm() {
               </li>
               <li
                 onClick={() => {
-                  if (data?.data?.length === limit) {
-                    setPage((page) => page + 1);
+                  if (data?.data?.length === pagination.limit) {
+                    dispatch(nextPage());
                   }
                 }}
               >
