@@ -27,7 +27,7 @@ This is a minimalist full-stack website to manage a library.
 - [x] add cors
 - [x] add redux
 - [x] Pagination
-- [ ] Fix the next button bug.
+- [x] Fix the next button bug.
 - [ ] filter search
 - [ ] Edit/Borrow/Delete btns
 - [ ] Make the RTK Queries for the above btns

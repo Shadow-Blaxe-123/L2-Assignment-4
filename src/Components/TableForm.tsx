@@ -8,8 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { CiEdit } from "react-icons/ci";
 import { useState } from "react";
 import { ClockLoader } from "react-spinners";
+import { Button } from "./ui/button";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { PiNotebookDuotone } from "react-icons/pi";
 
 function TableForm() {
   const [page, setPage] = useState(1);
@@ -57,9 +61,9 @@ function TableForm() {
               </li>
               <li
                 onClick={() => {
-                  if (data.data.length > 0) {
-                    setPage(page + 1);
-                    console.log(data);
+                  // setPage(page + 1);
+                  if (data?.data?.length === limit) {
+                    setPage((page) => page + 1);
                   }
                 }}
               >
@@ -76,7 +80,7 @@ function TableForm() {
                       stroke="currentColor"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      stroke-width="2"
+                      strokeWidth="2"
                       d="m1 9 4-4-4-4"
                     />
                   </svg>
@@ -109,10 +113,16 @@ function TableForm() {
                 <TableCell>
                   {book.available ? "Available" : "Unavailable"}
                 </TableCell>
-                <TableCell>
-                  <button>Edit</button>
-                  <button>Delete</button>
-                  <button>Borrow</button>
+                <TableCell className="flex gap-3">
+                  <Button variant="secondary" size={"default"}>
+                    <CiEdit />
+                  </Button>
+                  <Button variant="destructive" size={"default"}>
+                    <RiDeleteBin6Line />
+                  </Button>
+                  <Button>
+                    <PiNotebookDuotone />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
