@@ -1,7 +1,7 @@
 import {
   useDeleteBookMutation,
   useGetAllBooksQuery,
-} from "@/redux/api/getBookQuery";
+} from "@/redux/api/BookApi";
 import {
   Table,
   TableBody,

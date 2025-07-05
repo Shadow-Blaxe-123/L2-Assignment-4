@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import navbarReducer from "./navbarSlice";
-import { booksAPi } from "./api/getBookQuery";
+import { booksAPi } from "./api/BookApi";
 import paginationReducer from "./paginationSlice";
 
 export const store = configureStore({
