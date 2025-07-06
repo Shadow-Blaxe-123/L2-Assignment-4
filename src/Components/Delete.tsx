@@ -29,7 +29,6 @@ function Delete({ id }: DeleteProps) {
     dispatch(setLoading(true));
     try {
       await deleteBook(id).unwrap(); // unwrap to catch actual error
-      // toast.success("Book deleted successfully");
       toast.success("Book deleted successfully");
       console.log("Deleted!");
     } catch (err) {

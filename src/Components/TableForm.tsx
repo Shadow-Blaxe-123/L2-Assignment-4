@@ -34,11 +34,19 @@ import {
   SelectValue,
 } from "./ui/select";
 import Delete from "./Delete";
+import { useEffect } from "react";
+import { setLoading } from "@/redux/loadingSlice";
 
 function TableForm() {
   const dispatch = useAppDispatch();
   const pagination = useAppSelector((state) => state.pagination);
-  const { data, isSuccess, isError, error } = useGetAllBooksQuery(pagination);
+  const { data, isLoading, isSuccess, isError, error } =
+    useGetAllBooksQuery(pagination);
+
+  // Sync RTK query loading to global loading state:
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
 
   if (isError) return <p>Error loading books: {JSON.stringify(error)}</p>;
 
