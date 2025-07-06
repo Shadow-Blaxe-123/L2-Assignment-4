@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import navbarReducer from "./navbarSlice";
 import { booksAPi } from "./api/BookApi";
 import paginationReducer from "./paginationSlice";
+import loadingReducer from "./loadingSlice";
 
 export const store = configureStore({
   reducer: {
     navbar: navbarReducer,
     pagination: paginationReducer,
+    isLoading: loadingReducer,
     [booksAPi.reducerPath]: booksAPi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

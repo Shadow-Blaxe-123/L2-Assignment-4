@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { PaginationState } from "./api/types";
 
-const initialState = {
+const initialState: PaginationState = {
   limit: 10,
   page: 1,
 };

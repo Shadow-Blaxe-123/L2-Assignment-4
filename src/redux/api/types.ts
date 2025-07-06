@@ -13,3 +13,12 @@ export interface GetAllBooks {
   message: string;
   data: Book[];
 }
+
+export interface NavbarState {
+  isOpen: boolean;
+}
+
+export interface PaginationState {
+  limit: number;
+  page: number;
+}
