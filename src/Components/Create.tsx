@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +11,7 @@ import {
   DialogClose,
 } from "./ui/dialog";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import { Label } from "@/components/ui/label";
 import { useAppDispatch } from "@/redux/hooks";
 import { useAddBookMutation } from "@/redux/api/BookApi";
 import { setLoading } from "@/redux/loadingSlice";

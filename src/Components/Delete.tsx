@@ -9,12 +9,12 @@ import {
   AlertDialogTitle,
   AlertDialogHeader,
   AlertDialogTrigger,
-} from "./ui/alert-dialog";
+} from "@/components/ui/alert-dialog";
 import { useAppDispatch } from "@/redux/hooks";
 import { toast } from "sonner";
-import { Button } from "./ui/button";
 import { useDeleteBookMutation } from "@/redux/api/BookApi";
 import { setLoading } from "@/redux/loadingSlice";
+import { Button } from "@/components/ui/button";
 
 interface DeleteProps {
   id: string;

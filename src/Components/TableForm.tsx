@@ -7,18 +7,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from "@/components/ui/table";
 
-import { Button } from "./ui/button";
-import { PiNotebookDuotone } from "react-icons/pi";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { nextPage, prevPage } from "@/redux/paginationSlice";
 
-import Delete from "./Delete";
+import Delete from "@/components/Delete";
 import { useEffect } from "react";
 import { setLoading } from "@/redux/loadingSlice";
-import Edit from "./Edit";
+import Edit from "@/components/Edit";
+import Borrow from "@/components/Borrow";
 
 function TableForm() {
   const dispatch = useAppDispatch();
@@ -91,9 +90,7 @@ function TableForm() {
                   {/* Delete Modal */}
                   <Delete id={book._id} />
 
-                  <Button>
-                    <PiNotebookDuotone />
-                  </Button>
+                  <Borrow />
                 </TableCell>
               </TableRow>
             ))}

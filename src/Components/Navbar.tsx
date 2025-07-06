@@ -1,7 +1,8 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { toggle } from "@/redux/navbarSlice";
 import { allBooks } from "@/redux/paginationSlice";
-import Create from "./Create";
+import Create from "@/components/Create";
+// import Create from "./Create";
 
 function Navbar() {
   const isOpen = useAppSelector((state) => state.navbar.isOpen);
@@ -63,7 +64,7 @@ function Navbar() {
               <Create />
             </li>
             <li className="py-2 px-3 rounded-md text-white hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-500 transition-all cursor-pointer">
-              Borrow Books
+              Borrow Books Summary
             </li>
           </ul>
         </div>

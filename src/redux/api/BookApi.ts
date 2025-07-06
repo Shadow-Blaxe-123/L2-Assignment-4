@@ -11,7 +11,8 @@ export const booksAPi = createApi({
   tagTypes: ["Book"],
   endpoints: (builder) => ({
     getAllBooks: builder.query<ResBooks, { limit: number; page: number }>({
-      query: ({ limit, page }) => `/?limit=${limit}&page=${page}`, // Pagination params
+      query: ({ limit, page }) =>
+        `/?sort=desc&limit=${limit}&sortBy=createdAt&page=${page}`, // Pagination params
       providesTags: ["Book"],
     }),
     deleteBook: builder.mutation<DeleteBook, string>({
