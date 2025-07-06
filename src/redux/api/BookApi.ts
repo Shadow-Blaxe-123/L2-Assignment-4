@@ -1,6 +1,6 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { GetAllBooks } from "./types";
+import type { Book, DeleteBook, ResBooks } from "./types";
 
 // Define a service using a base URL and expected endpoints
 export const booksAPi = createApi({
@@ -10,18 +10,33 @@ export const booksAPi = createApi({
   }),
   tagTypes: ["Book"],
   endpoints: (builder) => ({
-    getAllBooks: builder.query<GetAllBooks, { limit: number; page: number }>({
+    getAllBooks: builder.query<ResBooks, { limit: number; page: number }>({
       query: ({ limit, page }) => `/?limit=${limit}&page=${page}`, // Pagination params
       providesTags: ["Book"],
     }),
-    deleteBook: builder.mutation({
+    deleteBook: builder.mutation<DeleteBook, string>({
       query: (id) => ({
         url: `/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Book"],
     }),
+    editBook: builder.mutation<
+      ResBooks,
+      { id: string; newBook: Partial<Omit<Book, "_id">> }
+    >({
+      query: ({ id, newBook }) => ({
+        url: `/${id}`,
+        method: "PATCH",
+        body: newBook,
+      }),
+      invalidatesTags: ["Book"],
+    }),
   }),
 });
 
-export const { useGetAllBooksQuery, useDeleteBookMutation } = booksAPi;
+export const {
+  useGetAllBooksQuery,
+  useDeleteBookMutation,
+  useEditBookMutation,
+} = booksAPi;

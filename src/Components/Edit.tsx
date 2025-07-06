@@ -11,28 +11,59 @@ import {
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { CiEdit } from "react-icons/ci";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import { Button } from "./ui/button";
 import type { Book } from "@/redux/api/types";
+import { useEditBookMutation } from "@/redux/api/BookApi";
+import { useAppDispatch } from "@/redux/hooks";
+import type React from "react";
+import { setLoading } from "@/redux/loadingSlice";
+import { toast } from "sonner";
 interface EditProps {
   book: Book;
 }
 export default function Edit({ book }: EditProps) {
+  const [editBook] = useEditBookMutation();
+  const dispatch = useAppDispatch();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const updatedBook = {
+      title: formData.get("title") as string,
+      author: formData.get("author") as string,
+      genre: formData.get("genre") as string,
+      isbn: formData.get("isbn") as string,
+      copies: Number(formData.get("copies")),
+      available: formData.get("available") === "true",
+      description: book.description,
+    };
+    try {
+      dispatch(setLoading(true));
+      await editBook({
+        id: book._id,
+        newBook: updatedBook,
+      }).unwrap();
+    } catch (error) {
+      console.error("Failed to update book:", error);
+      toast.error("Failed to update book");
+      dispatch(setLoading(false));
+    } finally {
+      dispatch(setLoading(false));
+    }
+
+    console.log("📘 Edited Book:", updatedBook);
+  };
+
   return (
     <Dialog>
-      <form>
-        <DialogTrigger asChild>
-          <Button variant="secondary" size={"default"}>
-            <CiEdit />
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+      <DialogTrigger asChild>
+        <Button variant="secondary" size={"default"}>
+          <CiEdit />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Edit Book</DialogTitle>
             <DialogDescription>
@@ -48,29 +79,21 @@ export default function Edit({ book }: EditProps) {
               <Label htmlFor="author-1">Author</Label>
               <Input id="author-1" name="author" defaultValue={book.author} />
             </div>
-            <div className="grid gap-3">
-              {/* <Label htmlFor="genre-1">Genre</Label>
-                            <Input
-                              id="author-1"
-                              name="genre"
-                              defaultValue={book.genre}
-                            /> */}
-              {/* Genre */}
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Genre" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="history" aria-checked="true">
-                    HISTORY
-                  </SelectItem>
-                  <SelectItem value="fiction">FICTION</SelectItem>
-                  <SelectItem value="non-fiction">NON_FICTION</SelectItem>
-                  <SelectItem value="biography">BIOGRAPHY</SelectItem>
-                  <SelectItem value="science">SCIENCE</SelectItem>
-                  <SelectItem value="fanatasy">FANATASY</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="grid gap-3 ">
+              <Label htmlFor="genre-1">Copies</Label>
+              <select
+                id="genre-1"
+                name="genre"
+                defaultValue={book.genre}
+                className="border border-[0.92,0,0,1] px-3 py-1 rounded-md"
+              >
+                <option value="HISTORY">HISTORY</option>
+                <option value="FICTION">FICTION</option>
+                <option value="NON_FICTION">NON_FICTION</option>
+                <option value="BIOGRAPHY">BIOGRAPHY</option>
+                <option value="SCIENCE">SCIENCE</option>
+                <option value="FANATASY">FANATASY</option>
+              </select>
             </div>
             <div className="grid gap-3">
               <Label htmlFor="isbn-1">Isbn</Label>
@@ -80,34 +103,29 @@ export default function Edit({ book }: EditProps) {
               <Label htmlFor="copies-1">Copies</Label>
               <Input id="copies-1" name="copies" defaultValue={book.copies} />
             </div>
-            <Select>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Availability" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  value="true"
-                  aria-checked={book.copies > 0 ? true : false}
-                >
-                  True
-                </SelectItem>
-                <SelectItem
-                  value="false"
-                  aria-checked={book.copies === 0 ? true : false}
-                >
-                  False
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="grid gap-3">
+              <Label htmlFor="available-1">Availability</Label>
+              <select
+                name="available"
+                defaultValue={book.available ? "true" : "false"}
+                id="available-1"
+                className="border border-[0.92,0,0,1] px-3 py-1 rounded-md mb-5"
+              >
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+            </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <DialogClose asChild>
+              <Button type="submit">Save changes</Button>
+            </DialogClose>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }

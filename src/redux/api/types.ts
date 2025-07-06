@@ -6,9 +6,10 @@ export type Book = {
   isbn: string;
   copies: number;
   available: boolean;
+  description: string;
 };
 
-export interface GetAllBooks {
+export interface ResBooks {
   success: boolean;
   message: string;
   data: Book[];
@@ -21,4 +22,10 @@ export interface NavbarState {
 export interface PaginationState {
   limit: number;
   page: number;
+}
+
+export interface DeleteBook {
+  success: boolean;
+  message: string;
+  data: null;
 }

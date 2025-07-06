@@ -33,8 +33,8 @@ This is a minimalist full-stack website to manage a library.
 - [x] Delete Logic
 - [x] Make Delete Confirmation popup
 - [x] Delete Toaster
+- [x] Make an Edit page
 - [ ] Make the RTK Queries for the edit/borrow/borrow summary.
-- [ ] Make an Edit page
 - [ ] A Borrow Modal success or toast
 - [ ] Make toasts for every action
 - [ ] filter search
