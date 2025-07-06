@@ -21,7 +21,6 @@ import {
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { CiEdit } from "react-icons/ci";
-import { ClockLoader } from "react-spinners";
 import { Button } from "./ui/button";
 import { PiNotebookDuotone } from "react-icons/pi";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
@@ -39,15 +38,8 @@ import Delete from "./Delete";
 function TableForm() {
   const dispatch = useAppDispatch();
   const pagination = useAppSelector((state) => state.pagination);
-  const isGlobalLoading = useAppSelector((state) => state.isLoading.isLoading);
   const { data, isSuccess, isError, error } = useGetAllBooksQuery(pagination);
 
-  if (isGlobalLoading)
-    return (
-      <p className="flex items-center justify-center h-screen">
-        <ClockLoader size={200} color="purple" speedMultiplier={2} />
-      </p>
-    );
   if (isError) return <p>Error loading books: {JSON.stringify(error)}</p>;
 
   if (isSuccess) {
