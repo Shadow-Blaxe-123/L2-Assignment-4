@@ -1,7 +1,4 @@
-import {
-  useDeleteBookMutation,
-  useGetAllBooksQuery,
-} from "@/redux/api/BookApi";
+import { useGetAllBooksQuery } from "@/redux/api/BookApi";
 import {
   Table,
   TableBody,
@@ -26,23 +23,10 @@ import { Label } from "@/Components/ui/label";
 import { CiEdit } from "react-icons/ci";
 import { ClockLoader } from "react-spinners";
 import { Button } from "./ui/button";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { PiNotebookDuotone } from "react-icons/pi";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogAction,
-  AlertDialogFooter,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogTitle,
-  AlertDialogHeader,
-  AlertDialogTrigger,
-} from "./ui/alert-dialog";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { nextPage, prevPage } from "@/redux/paginationSlice";
-import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -50,26 +34,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import Delete from "./Delete";
 
 function TableForm() {
   const dispatch = useAppDispatch();
   const pagination = useAppSelector((state) => state.pagination);
-  const { data, isSuccess, isLoading, isError, error } =
-    useGetAllBooksQuery(pagination);
+  const isGlobalLoading = useAppSelector((state) => state.isLoading.isLoading);
+  const { data, isSuccess, isError, error } = useGetAllBooksQuery(pagination);
 
-  const [deleteBook, { isLoading: isDeleting }] = useDeleteBookMutation();
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteBook(id).unwrap(); // unwrap to catch actual error
-      // toast.success("Book deleted successfully");
-      toast.success("Book deleted successfully");
-      console.log("Deleted!");
-    } catch (err) {
-      console.error("Failed to delete:", err);
-    }
-  };
-
-  if (isLoading || isDeleting)
+  if (isGlobalLoading)
     return (
       <p className="flex items-center justify-center h-screen">
         <ClockLoader size={200} color="purple" speedMultiplier={2} />
@@ -239,30 +212,7 @@ function TableForm() {
                     </form>
                   </Dialog>
                   {/* Delete Modal */}
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="destructive" size="default">
-                        <RiDeleteBin6Line />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. The book will be
-                          permanently deleted.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(book._id)}
-                        >
-                          Yes, delete it
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <Delete id={book._id} />
 
                   <Button>
                     <PiNotebookDuotone />
