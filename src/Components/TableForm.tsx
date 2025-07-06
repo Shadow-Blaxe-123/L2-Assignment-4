@@ -30,6 +30,7 @@ import {
 } from "./ui/alert-dialog";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { nextPage, prevPage } from "@/redux/paginationSlice";
+import { toast } from "sonner";
 
 function TableForm() {
   const dispatch = useAppDispatch();
@@ -41,6 +42,8 @@ function TableForm() {
   const handleDelete = async (id: string) => {
     try {
       await deleteBook(id).unwrap(); // unwrap to catch actual error
+      // toast.success("Book deleted successfully");
+      toast.success("Book deleted successfully");
       console.log("Deleted!");
     } catch (err) {
       console.error("Failed to delete:", err);
