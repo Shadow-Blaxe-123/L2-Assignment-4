@@ -44,6 +44,7 @@ export default function Edit({ book }: EditProps) {
         id: book._id,
         newBook: updatedBook,
       }).unwrap();
+      toast.success("Book updated successfully");
     } catch (error) {
       console.error("Failed to update book:", error);
       toast.error("Failed to update book");
@@ -80,7 +81,7 @@ export default function Edit({ book }: EditProps) {
               <Input id="author-1" name="author" defaultValue={book.author} />
             </div>
             <div className="grid gap-3 ">
-              <Label htmlFor="genre-1">Copies</Label>
+              <Label htmlFor="genre-1">Genre</Label>
               <select
                 id="genre-1"
                 name="genre"
@@ -92,7 +93,7 @@ export default function Edit({ book }: EditProps) {
                 <option value="NON_FICTION">NON_FICTION</option>
                 <option value="BIOGRAPHY">BIOGRAPHY</option>
                 <option value="SCIENCE">SCIENCE</option>
-                <option value="FANATASY">FANATASY</option>
+                <option value="FANTASY">FANTASY</option>
               </select>
             </div>
             <div className="grid gap-3">
