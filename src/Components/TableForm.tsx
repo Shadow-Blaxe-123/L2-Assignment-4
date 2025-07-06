@@ -43,6 +43,13 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { nextPage, prevPage } from "@/redux/paginationSlice";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 function TableForm() {
   const dispatch = useAppDispatch();
@@ -123,9 +130,115 @@ function TableForm() {
                   {book.available ? "Available" : "Unavailable"}
                 </TableCell>
                 <TableCell className="flex gap-3">
-                  <Button variant="secondary" size={"default"}>
-                    <CiEdit />
-                  </Button>
+                  {/* Edit Modal */}
+                  <Dialog>
+                    <form>
+                      <DialogTrigger asChild>
+                        <Button variant="secondary" size={"default"}>
+                          <CiEdit />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Edit Book</DialogTitle>
+                          <DialogDescription>
+                            Make changes to your book here. Click save when
+                            you&apos;re done.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4">
+                          <div className="grid gap-3">
+                            <Label htmlFor="title-1">Title</Label>
+                            <Input
+                              id="title-1"
+                              name="title"
+                              defaultValue={book.title}
+                            />
+                          </div>
+                          <div className="grid gap-3">
+                            <Label htmlFor="author-1">Author</Label>
+                            <Input
+                              id="author-1"
+                              name="author"
+                              defaultValue={book.author}
+                            />
+                          </div>
+                          <div className="grid gap-3">
+                            {/* <Label htmlFor="genre-1">Genre</Label>
+                            <Input
+                              id="author-1"
+                              name="genre"
+                              defaultValue={book.genre}
+                            /> */}
+                            {/* Genre */}
+                            <Select>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Genre" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="history" aria-checked="true">
+                                  HISTORY
+                                </SelectItem>
+                                <SelectItem value="fiction">FICTION</SelectItem>
+                                <SelectItem value="non-fiction">
+                                  NON_FICTION
+                                </SelectItem>
+                                <SelectItem value="biography">
+                                  BIOGRAPHY
+                                </SelectItem>
+                                <SelectItem value="science">SCIENCE</SelectItem>
+                                <SelectItem value="fanatasy">
+                                  FANATASY
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="grid gap-3">
+                            <Label htmlFor="isbn-1">Isbn</Label>
+                            <Input
+                              id="isbn-1"
+                              name="isbn"
+                              defaultValue={book.isbn}
+                            />
+                          </div>
+                          <div className="grid gap-3">
+                            <Label htmlFor="copies-1">Copies</Label>
+                            <Input
+                              id="copies-1"
+                              name="copies"
+                              defaultValue={book.copies}
+                            />
+                          </div>
+                          <Select>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Availability" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem
+                                value="true"
+                                aria-checked={book.copies > 0 ? true : false}
+                              >
+                                True
+                              </SelectItem>
+                              <SelectItem
+                                value="false"
+                                aria-checked={book.copies === 0 ? true : false}
+                              >
+                                False
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <DialogFooter>
+                          <DialogClose asChild>
+                            <Button variant="outline">Cancel</Button>
+                          </DialogClose>
+                          <Button type="submit">Save changes</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </form>
+                  </Dialog>
+                  {/* Delete Modal */}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="destructive" size="default">
@@ -151,48 +264,9 @@ function TableForm() {
                     </AlertDialogContent>
                   </AlertDialog>
 
-                  <Dialog>
-                    <form>
-                      <DialogTrigger asChild>
-                        <Button>
-                          <PiNotebookDuotone />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                          <DialogTitle>Edit profile</DialogTitle>
-                          <DialogDescription>
-                            Make changes to your profile here. Click save when
-                            you&apos;re done.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4">
-                          <div className="grid gap-3">
-                            <Label htmlFor="name-1">Name</Label>
-                            <Input
-                              id="name-1"
-                              name="name"
-                              defaultValue="Pedro Duarte"
-                            />
-                          </div>
-                          <div className="grid gap-3">
-                            <Label htmlFor="username-1">Username</Label>
-                            <Input
-                              id="username-1"
-                              name="username"
-                              defaultValue="@peduarte"
-                            />
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <DialogClose asChild>
-                            <Button variant="outline">Cancel</Button>
-                          </DialogClose>
-                          <Button type="submit">Save changes</Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </form>
-                  </Dialog>
+                  <Button>
+                    <PiNotebookDuotone />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
