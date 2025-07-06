@@ -18,10 +18,12 @@ import { useAppDispatch } from "@/redux/hooks";
 import type React from "react";
 import { setLoading } from "@/redux/loadingSlice";
 import { toast } from "sonner";
+import { useState } from "react";
 interface EditProps {
   book: Book;
 }
 export default function Edit({ book }: EditProps) {
+  const [open, setOpen] = useState(false);
   const [editBook] = useEditBookMutation();
   const dispatch = useAppDispatch();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -38,6 +40,7 @@ export default function Edit({ book }: EditProps) {
       available: formData.get("available") === "true",
       description: book.description,
     };
+    setOpen(false);
     try {
       dispatch(setLoading(true));
       await editBook({
@@ -57,7 +60,7 @@ export default function Edit({ book }: EditProps) {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary" size={"default"}>
           <CiEdit />
@@ -74,11 +77,21 @@ export default function Edit({ book }: EditProps) {
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="title-1">Title</Label>
-              <Input id="title-1" name="title" defaultValue={book.title} />
+              <Input
+                id="title-1"
+                name="title"
+                defaultValue={book.title}
+                required
+              />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="author-1">Author</Label>
-              <Input id="author-1" name="author" defaultValue={book.author} />
+              <Input
+                id="author-1"
+                name="author"
+                defaultValue={book.author}
+                required
+              />
             </div>
             <div className="grid gap-3 ">
               <Label htmlFor="genre-1">Genre</Label>
@@ -87,6 +100,7 @@ export default function Edit({ book }: EditProps) {
                 name="genre"
                 defaultValue={book.genre}
                 className="border border-[0.92,0,0,1] px-3 py-1 rounded-md"
+                required
               >
                 <option value="HISTORY">HISTORY</option>
                 <option value="FICTION">FICTION</option>
@@ -98,11 +112,21 @@ export default function Edit({ book }: EditProps) {
             </div>
             <div className="grid gap-3">
               <Label htmlFor="isbn-1">Isbn</Label>
-              <Input id="isbn-1" name="isbn" defaultValue={book.isbn} />
+              <Input
+                id="isbn-1"
+                name="isbn"
+                defaultValue={book.isbn}
+                required
+              />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="copies-1">Copies</Label>
-              <Input id="copies-1" name="copies" defaultValue={book.copies} />
+              <Input
+                id="copies-1"
+                name="copies"
+                defaultValue={book.copies}
+                required
+              />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="available-1">Availability</Label>
@@ -121,9 +145,7 @@ export default function Edit({ book }: EditProps) {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <DialogClose asChild>
-              <Button type="submit">Save changes</Button>
-            </DialogClose>
+            <Button type="submit">Save changes</Button>
           </DialogFooter>
         </form>
       </DialogContent>

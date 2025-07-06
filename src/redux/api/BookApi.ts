@@ -32,6 +32,18 @@ export const booksAPi = createApi({
       }),
       invalidatesTags: ["Book"],
     }),
+    addBook: builder.mutation<
+      ResBooks,
+      { book: Partial<Omit<Book, "_id">> } // ✅ Correct type
+    >({
+      query: ({ book }) => ({
+        // ✅ Destructure `book`
+        url: "/",
+        method: "POST",
+        body: book,
+      }),
+      invalidatesTags: ["Book"],
+    }),
   }),
 });
 
@@ -39,4 +51,5 @@ export const {
   useGetAllBooksQuery,
   useDeleteBookMutation,
   useEditBookMutation,
+  useAddBookMutation,
 } = booksAPi;
