@@ -32,7 +32,8 @@ This is a minimalist full-stack website to manage a library.
 - [x] Edit/Borrow/Delete btns Ui
 - [x] Delete Logic
 - [x] Make Delete Confirmation popup
-- [ ] Make the RTK Queries for the above btns
+- [x] Delete Toaster
+- [ ] Make the RTK Queries for the edit/borrow/borrow summary.
 - [ ] Make an Edit page
 - [ ] A Borrow Modal success or toast
 - [ ] Make toasts for every action
