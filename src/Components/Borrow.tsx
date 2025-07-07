@@ -25,35 +25,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { ChevronDownIcon } from "lucide-react";
 import { useBorrowBookMutation } from "@/redux/api/BorrowApi";
 import { borrowSummaryDialog } from "@/redux/navbarSlice";
+import { formatDateTime } from "@/lib/utils";
 
 interface Props {
   title: string;
   id: string;
   copies: number;
   available: boolean;
-}
-
-function formatDateTime(date: Date, time: string): string {
-  const pad = (n: number) => n.toString().padStart(2, "0");
-
-  // Parse time string "HH:MM:SS"
-  const [hours, minutes, seconds] = time.split(":").map(Number);
-
-  // Clone date so original is not mutated
-  const combinedDateTime = new Date(date);
-  combinedDateTime.setHours(hours);
-  combinedDateTime.setMinutes(minutes);
-  combinedDateTime.setSeconds(seconds);
-
-  const year = combinedDateTime.getFullYear();
-  const month = pad(combinedDateTime.getMonth() + 1);
-  const day = pad(combinedDateTime.getDate());
-
-  const hh = pad(combinedDateTime.getHours());
-  const mm = pad(combinedDateTime.getMinutes());
-  const ss = pad(combinedDateTime.getSeconds());
-
-  return `${year}-${month}-${day} ${hh}:${mm}:${ss}`;
 }
 
 export default function Borrow({ title, id, copies, available }: Props) {
