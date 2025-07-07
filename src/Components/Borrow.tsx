@@ -24,11 +24,13 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { ChevronDownIcon } from "lucide-react";
 import { useBorrowBookMutation } from "@/redux/api/BorrowApi";
+import { borrowSummaryDialog } from "@/redux/navbarSlice";
 
 interface Props {
   title: string;
   id: string;
   copies: number;
+  available: boolean;
 }
 
 function formatDateTime(date: Date, time: string): string {
@@ -54,7 +56,7 @@ function formatDateTime(date: Date, time: string): string {
   return `${year}-${month}-${day} ${hh}:${mm}:${ss}`;
 }
 
-export default function Borrow({ title, id, copies }: Props) {
+export default function Borrow({ title, id, copies, available }: Props) {
   // States
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -81,6 +83,7 @@ export default function Borrow({ title, id, copies }: Props) {
       dispatch(setLoading(true));
       const res = await borrow(borrowBook).unwrap();
       toast.success("Book borrowed successfully");
+      dispatch(borrowSummaryDialog());
       console.log(res);
     } catch (error) {
       console.error("Failed to borrow book:", error);
@@ -92,6 +95,13 @@ export default function Borrow({ title, id, copies }: Props) {
 
     console.log("📘 Borrow Book:");
   };
+  if (available === false) {
+    return (
+      <div className="flex items-center justify-center gap-2">
+        <span className="text-sm text-red-500">Not available</span>
+      </div>
+    );
+  }
 
   return (
     <Dialog open={open1} onOpenChange={setOpen1}>

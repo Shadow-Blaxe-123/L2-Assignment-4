@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -20,12 +20,16 @@ import {
 } from "@/components/ui/table";
 import type { BorrowSummary } from "@/redux/api/types";
 import { useGetBorrowSummaryQuery } from "@/redux/api/BorrowApi";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setLoading } from "@/redux/loadingSlice";
+import { borrowSummaryDialog } from "@/redux/navbarSlice";
 
 export default function BorrowSummary() {
   const dispatch = useAppDispatch();
-  const [open, setOpen] = useState(false);
+  //   const [open, setOpen] = useState(false);
+  const open: boolean = useAppSelector(
+    (state) => state.navbar.borrowSummaryDialogState
+  );
   const { data, isLoading, isSuccess, isError, error } =
     useGetBorrowSummaryQuery();
 
@@ -40,7 +44,7 @@ export default function BorrowSummary() {
 
   if (isSuccess) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={() => dispatch(borrowSummaryDialog())}>
         <DialogTrigger asChild>
           <Button className="bg-blue-600 text-white">
             Show Borrow Summary
