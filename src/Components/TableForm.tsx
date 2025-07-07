@@ -84,7 +84,10 @@ function TableForm() {
                 <TableCell>
                   {book.available ? "Available" : "Unavailable"}
                 </TableCell>
-                <TableCell className="flex gap-3">
+                <TableCell
+                  className="flex gap-3"
+                  onClick={() => console.log(typeof book.available)}
+                >
                   {/* Edit Modal */}
                   <Edit book={book} />
                   {/* Delete Modal */}
@@ -94,6 +97,7 @@ function TableForm() {
                     title={book.title}
                     id={book._id}
                     copies={book.copies}
+                    available={book.available}
                   />
                 </TableCell>
               </TableRow>

@@ -17,6 +17,7 @@ export interface ResBooks {
 
 export interface NavbarState {
   isOpen: boolean;
+  borrowSummaryDialogState: boolean;
 }
 
 export interface PaginationState {

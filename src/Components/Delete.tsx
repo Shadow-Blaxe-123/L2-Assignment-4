@@ -21,28 +21,26 @@ interface DeleteProps {
 }
 
 function Delete({ id }: DeleteProps) {
-  const [deleteBook] = useDeleteBookMutation();
-
+  const [deleteBook, { isLoading }] = useDeleteBookMutation();
   const dispatch = useAppDispatch();
-  const handleDelete = async (id: string) => {
-    // useAppDispatch(setLoading().payload = isLoading);
+
+  const handleDelete = async () => {
     dispatch(setLoading(true));
     try {
-      await deleteBook(id).unwrap(); // unwrap to catch actual error
+      await deleteBook(id).unwrap();
       toast.success("Book deleted successfully");
-      console.log("Deleted!");
     } catch (err) {
       console.error("Failed to delete:", err);
       toast.error("Failed to delete book");
-      dispatch(setLoading(false));
     } finally {
       dispatch(setLoading(false));
     }
   };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" size="default">
+        <Button variant="destructive" size="default" disabled={isLoading}>
           <RiDeleteBin6Line />
         </Button>
       </AlertDialogTrigger>
@@ -54,9 +52,9 @@ function Delete({ id }: DeleteProps) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => handleDelete(id)}>
-            Yes, delete it
+          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDelete} disabled={isLoading}>
+            {isLoading ? "Deleting..." : "Yes, delete it"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
