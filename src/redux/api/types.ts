@@ -29,3 +29,19 @@ export interface DeleteBook {
   message: string;
   data: null;
 }
+
+export interface Borrow {
+  book: string;
+  quantity: number;
+  dueDate: string;
+}
+
+export interface ResBorrow {
+  success: boolean;
+  message: string;
+  data: Borrow & {
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}

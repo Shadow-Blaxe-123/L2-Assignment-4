@@ -11,46 +11,94 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAppDispatch } from "@/redux/hooks";
-// import { setLoading } from "@/redux/loadingSlice";
-// import { toast } from "sonner";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setLoading } from "@/redux/loadingSlice";
+import { toast } from "sonner";
 import { PiNotebookDuotone } from "react-icons/pi";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { ChevronDownIcon } from "lucide-react";
+import { useBorrowBookMutation } from "@/redux/api/BorrowApi";
+import { useGetAllBooksQuery } from "@/redux/api/BookApi";
 
-export default function Borrow() {
-  const [open, setOpen] = useState(false);
+interface Props {
+  title: string;
+  id: string;
+  copies: number;
+}
+
+function formatDateTime(date: Date, time: string): string {
+  const pad = (n: number) => n.toString().padStart(2, "0");
+
+  // Parse time string "HH:MM:SS"
+  const [hours, minutes, seconds] = time.split(":").map(Number);
+
+  // Clone date so original is not mutated
+  const combinedDateTime = new Date(date);
+  combinedDateTime.setHours(hours);
+  combinedDateTime.setMinutes(minutes);
+  combinedDateTime.setSeconds(seconds);
+
+  const year = combinedDateTime.getFullYear();
+  const month = pad(combinedDateTime.getMonth() + 1);
+  const day = pad(combinedDateTime.getDate());
+
+  const hh = pad(combinedDateTime.getHours());
+  const mm = pad(combinedDateTime.getMinutes());
+  const ss = pad(combinedDateTime.getSeconds());
+
+  return `${year}-${month}-${day} ${hh}:${mm}:${ss}`;
+}
+
+export default function Borrow({ title, id, copies }: Props) {
+  // States
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [time, setTime] = useState("10:30:00"); // Default time
   const dispatch = useAppDispatch();
+  const pagination = useAppSelector((state) => state.pagination);
+  const [borrow] = useBorrowBookMutation();
+  const { refetch } = useGetAllBooksQuery(pagination);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const dueDate = date ? formatDateTime(date, time) : null;
+    console.log("Formatted dueDate:", dueDate);
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    // const updatedBook = {
-    //   title: formData.get("title") as string,
-    //   author: formData.get("author") as string,
-    //   genre: formData.get("genre") as string,
-    //   isbn: formData.get("isbn") as string,
-    //   copies: Number(formData.get("copies")),
-    //   available: formData.get("available") === "true",
-    // };
-    setOpen(false);
-    // try {
-    //   dispatch(setLoading(true));
-    //   await addBook({ book: updatedBook }).unwrap();
-    //   toast.success("Book created successfully");
-    // } catch (error) {
-    //   console.error("Failed to create book:", error);
-    //   toast.error("Failed to create book");
-    //   dispatch(setLoading(false));
-    // } finally {
-    //   dispatch(setLoading(false));
-    // }
+    const borrowBook = {
+      book: id,
+      quantity: Number(formData.get("quantity")),
+      dueDate: dueDate ?? "",
+    };
+    console.log("Form Data:", borrowBook);
+
+    setOpen1(false);
+    try {
+      dispatch(setLoading(true));
+      const res = await borrow(borrowBook).unwrap();
+      await refetch();
+      toast.success("Book borrowed successfully");
+      console.log(res);
+    } catch (error) {
+      console.error("Failed to borrow book:", error);
+      toast.error("Failed to borrow book");
+      dispatch(setLoading(false));
+    } finally {
+      dispatch(setLoading(false));
+    }
 
     console.log("📘 Borrow Book:");
   };
 
   return (
-    <DialogOverlay open={open} onOpenChange={setOpen}>
+    <Dialog open={open1} onOpenChange={setOpen1}>
       <DialogTrigger asChild>
         <Button>
           <PiNotebookDuotone />
@@ -67,64 +115,77 @@ export default function Borrow() {
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="title-1">Title</Label>
-              <Input id="title-1" name="title" required />
+              <span className="flex flex-col">
+                Book Title:
+                <span className="font-bold">{title}</span>
+              </span>
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="author-1">Author</Label>
-              <Input id="author-1" name="author" required />
-            </div>
-            <div className="grid gap-3 ">
-              <Label htmlFor="genre-1">Genre</Label>
-              <select
-                id="genre-1"
-                name="genre"
-                className="border border-[0.92,0,0,1] px-3 py-1 rounded-md"
-                defaultValue={"Select the genre"}
-                required
-              >
-                <option disabled>Select the genre</option>
-                <option value="HISTORY">HISTORY</option>
-                <option value="FICTION">FICTION</option>
-                <option value="NON_FICTION">NON_FICTION</option>
-                <option value="BIOGRAPHY">BIOGRAPHY</option>
-                <option value="SCIENCE">SCIENCE</option>
-                <option value="FANTASY">FANTASY</option>
-              </select>
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="isbn-1">Isbn</Label>
-              <Input id="isbn-1" name="isbn" required />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="copies-1">Copies</Label>
+              <Label htmlFor="quantity-1">Quantity</Label>
               <Input
-                id="copies-1"
-                name="copies"
-                type="number"
-                min={0}
-                step={1}
+                id="quantity-1"
+                name="quantity"
                 required
+                type="number"
+                max={copies}
+                defaultValue={1}
               />
             </div>
-            <div className="grid gap-3">
-              <Label htmlFor="available-1">Availability</Label>
-              <select
-                name="available"
-                defaultValue="true"
-                id="available-1"
-                className="border border-[0.92,0,0,1] px-3 py-1 rounded-md mb-5"
-              >
-                <option value="true">True</option>
-                <option value="false">False</option>
-              </select>
+            <div className="flex gap-4">
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="date-picker" className="px-1">
+                  Date
+                </Label>
+                <Popover open={open2} onOpenChange={setOpen2}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      id="date-picker"
+                      className="w-32 justify-between font-normal"
+                    >
+                      {date ? date.toLocaleDateString() : "Select date"}
+                      <ChevronDownIcon />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-auto overflow-hidden p-0"
+                    align="start"
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      captionLayout="dropdown"
+                      onSelect={(date) => {
+                        setDate(date);
+                        setOpen2(false);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="time-picker" className="px-1">
+                  Time
+                </Label>
+                <Input
+                  type="time"
+                  id="time-picker"
+                  step="1"
+                  value={time}
+                  required
+                  onChange={(e) => setTime(e.target.value)}
+                  className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                />
+              </div>
             </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Create</Button>
+            <Button type="submit" disabled={!date}>
+              Borrow
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

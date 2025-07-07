@@ -90,7 +90,11 @@ function TableForm() {
                   {/* Delete Modal */}
                   <Delete id={book._id} />
 
-                  <Borrow />
+                  <Borrow
+                    title={book.title}
+                    id={book._id}
+                    copies={book.copies}
+                  />
                 </TableCell>
               </TableRow>
             ))}

@@ -13,7 +13,7 @@ export const booksAPi = createApi({
     getAllBooks: builder.query<ResBooks, { limit: number; page: number }>({
       query: ({ limit, page }) =>
         `/?sort=desc&limit=${limit}&sortBy=createdAt&page=${page}`, // Pagination params
-      providesTags: ["Book"],
+      providesTags: ["Book", { type: "Book", id: "LIST" }],
     }),
     deleteBook: builder.mutation<DeleteBook, string>({
       query: (id) => ({
