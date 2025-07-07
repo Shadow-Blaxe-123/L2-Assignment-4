@@ -1,6 +1,8 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { Book, DeleteBook, ResBooks } from "./types";
+import { borrowApi } from "./BorrowApi";
+import type { RootState } from "@/redux/store";
 
 // Define a service using a base URL and expected endpoints
 export const booksAPi = createApi({
@@ -21,6 +23,27 @@ export const booksAPi = createApi({
         method: "DELETE",
       }),
       invalidatesTags: ["Book"],
+      onQueryStarted: async (id, { dispatch, getState, queryFulfilled }) => {
+        const { page, limit } = (getState() as RootState).pagination;
+        const patchResult = dispatch(
+          booksAPi.util.updateQueryData(
+            "getAllBooks",
+            { limit, page },
+            (draft) => {
+              draft.data = draft.data.filter((book) => book._id !== id);
+            }
+          )
+        );
+        // dispatch(setLoading(false));
+        try {
+          await queryFulfilled;
+          // ✅ Invalidate the Book tag from the booksApi slice
+          dispatch(borrowApi.util.invalidateTags(["BorrowSummary"]));
+        } catch {
+          patchResult.undo();
+          // Optional: handle error if needed
+        }
+      },
     }),
     editBook: builder.mutation<
       ResBooks,
@@ -32,6 +55,33 @@ export const booksAPi = createApi({
         body: newBook,
       }),
       invalidatesTags: ["Book"],
+      onQueryStarted: async (
+        { id, newBook },
+        { dispatch, queryFulfilled, getState }
+      ) => {
+        const { page, limit } = (getState() as RootState).pagination;
+
+        const patchResult = dispatch(
+          booksAPi.util.updateQueryData(
+            "getAllBooks",
+            { limit, page },
+            (draft) => {
+              const book = draft.data.find((b) => b._id === id);
+              if (book) {
+                Object.assign(book, newBook);
+              }
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+          // ✅ Invalidate the Book tag from the booksApi slice
+          dispatch(borrowApi.util.invalidateTags(["BorrowSummary"]));
+        } catch {
+          patchResult.undo();
+          // Optional: handle error if needed
+        }
+      },
     }),
     addBook: builder.mutation<
       ResBooks,
@@ -44,6 +94,53 @@ export const booksAPi = createApi({
         body: book,
       }),
       invalidatesTags: ["Book"],
+      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        // Update cache immediately before server response:
+        const patchResult = dispatch(
+          booksAPi.util.updateQueryData(
+            "getAllBooks",
+            { limit: 10, page: 1 }, // adjust based on your pagination params or fetch from store
+            (draft) => {
+              // Push a "temporary" book object to the cached list
+              draft.data.unshift({
+                // _id could be a temporary id for optimistic UI
+                _id: "temp-id-" + Math.random().toString(36).substring(2, 9),
+                title: arg.book.title || "Untitled",
+                author: arg.book.author || "",
+                genre: arg.book.genre || "",
+                isbn: arg.book.isbn || "",
+                copies: arg.book.copies || 1,
+                available: arg.book.available ?? true,
+                description: arg.book.description || "No description",
+                // Add other fields if needed
+              });
+            }
+          )
+        );
+
+        try {
+          const { data: addedBook } = await queryFulfilled;
+
+          // Optionally replace the temp book with the real one returned from server
+          dispatch(
+            booksAPi.util.updateQueryData(
+              "getAllBooks",
+              { limit: 10, page: 1 },
+              (draft) => {
+                const index = draft.data.findIndex((b) =>
+                  b._id.startsWith("temp-id-")
+                );
+                if (index !== -1) {
+                  draft.data[index] = addedBook.data[0]; // Assuming server returns added book as first item
+                }
+              }
+            )
+          );
+        } catch {
+          // If server call fails, rollback the optimistic update
+          patchResult.undo();
+        }
+      },
     }),
   }),
 });

@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { Borrow, ResBorrow, ResBorrowSummary } from "./types";
 import { booksAPi } from "./BookApi";
+import type { RootState } from "../store";
 
 export const borrowApi = createApi({
   reducerPath: "borrowApi",
@@ -16,13 +17,31 @@ export const borrowApi = createApi({
         body: borrow,
       }),
       invalidatesTags: ["BorrowSummary"],
-      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (
+        borrow,
+        { dispatch, queryFulfilled, getState }
+      ) => {
+        const { page, limit } = (getState() as RootState).pagination;
+        const patchResult = dispatch(
+          booksAPi.util.updateQueryData(
+            "getAllBooks",
+            { limit, page },
+            (draft) => {
+              const book = draft.data.find((b) => b._id === borrow.book);
+              if (book) {
+                book.copies -= borrow.quantity;
+                book.available = book.copies > 0;
+              }
+            }
+          )
+        );
         try {
           await queryFulfilled;
           // ✅ Invalidate the Book tag from the booksApi slice
           dispatch(booksAPi.util.invalidateTags(["Book"]));
         } catch {
           // Optional: handle error if needed
+          patchResult.undo();
         }
       },
     }),
