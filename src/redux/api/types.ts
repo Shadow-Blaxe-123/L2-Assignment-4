@@ -45,3 +45,17 @@ export interface ResBorrow {
     updatedAt: string;
   };
 }
+
+export interface BorrowSummary {
+  totalQuantity: number;
+  book: {
+    title: string;
+    isbn: string;
+  };
+}
+
+export interface ResBorrowSummary {
+  success: boolean;
+  message: string;
+  data: BorrowSummary[];
+}

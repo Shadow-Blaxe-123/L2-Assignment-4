@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import { setLoading } from "@/redux/loadingSlice";
 import { toast } from "sonner";
 import { PiNotebookDuotone } from "react-icons/pi";
@@ -24,7 +24,6 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { ChevronDownIcon } from "lucide-react";
 import { useBorrowBookMutation } from "@/redux/api/BorrowApi";
-import { useGetAllBooksQuery } from "@/redux/api/BookApi";
 
 interface Props {
   title: string;
@@ -62,9 +61,7 @@ export default function Borrow({ title, id, copies }: Props) {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [time, setTime] = useState("10:30:00"); // Default time
   const dispatch = useAppDispatch();
-  const pagination = useAppSelector((state) => state.pagination);
   const [borrow] = useBorrowBookMutation();
-  const { refetch } = useGetAllBooksQuery(pagination);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const dueDate = date ? formatDateTime(date, time) : null;
@@ -83,7 +80,6 @@ export default function Borrow({ title, id, copies }: Props) {
     try {
       dispatch(setLoading(true));
       const res = await borrow(borrowBook).unwrap();
-      await refetch();
       toast.success("Book borrowed successfully");
       console.log(res);
     } catch (error) {
