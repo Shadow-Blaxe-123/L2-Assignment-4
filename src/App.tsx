@@ -1,4 +1,4 @@
-import TableForm from "./Components/TableForm";
+import TableForm from "@/components/TableForm";
 
 function App() {
   return (

@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from "react";
-import Footer from "./Components/Footer";
-import Navbar from "./Components/Navbar";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import { Toaster } from "sonner";
-import Loader from "./Components/Loader";
+import Loader from "@/components/Loader";
 
 function Layout({ children }: PropsWithChildren) {
   return (
